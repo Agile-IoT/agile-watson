@@ -89,7 +89,7 @@ $ mvn clean install
 ```shell
 # MQTT parameters
 MQTT_TOPICS = iot-2/type/+/id/+/evt/event/fmt/+
-MQTT_SERVER_URI = ssl://8riy9e.messaging.internetofthings.ibmcloud.com:8883
+MQTT_SERVER_URI = ssl://XXXXXXXX.messaging.internetofthings.ibmcloud.com:8883
 
 #Watson IoT Platform parameters
 APP_ID = XXXXXXXXXXXXXX
@@ -99,7 +99,7 @@ AUTH_TOKEN =  XXXXXXXXXXXXXX
 #Prediction parameters
 PREDICTION_CYCLE = 10
 ZSCORE_WINDOW = 10
-PREDICTIVE_SERVICE_URL = https://ibm-watson-ml.eu-gb.bluemix.net/pm/v1/score/nocycle20rebuid50?accesskey=EzjIR1yqpeSLI1k8XXXO1x8hwYLRGn9Hb4/5XXgqYG5wWJAm8oHM3dFJPzSvZ0fKc1AbOE1UW5e5NZRAC6JLeJm4UhduKiR4fCfmGQLC1t8=
+PREDICTIVE_SERVICE_URL = https://ibm-watson-ml.eu-gb.bluemix.net/pm/v1/score/nocycle20rebuid50?accesskey=XXXXXXXXXXXXXX
 ```
 
 4. Run the project using the following command
