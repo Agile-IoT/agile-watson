@@ -9,7 +9,7 @@
 1. Clone the project
 2. Go to agile folder
 3. Run the agile platform using the following command
-```console
+```shell
 cd agile/agile/agile-cli
 ./agile start
 ```
