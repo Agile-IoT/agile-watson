@@ -1,0 +1,223 @@
+#-------------------------------------------------------------------------------
+# Copyright (C) 2017 Resin.io, UNI Passau, FBK.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#     Resin.io, UNI Passau, FBK - initial API and implementation
+#-------------------------------------------------------------------------------
+version: '2'
+
+services:
+#  agile-example:
+#    container_name: agile-example
+#    build: apps/agile-example
+#    # image: agileiot/agile-example-$AGILE_ARCH:v0.1.1
+#    depends_on:
+#      - agile-core
+#    command: node index.js
+
+  agile-dbus:
+    container_name: agile-dbus
+    image: agileiot/agile-dbus-$AGILE_ARCH:v0.1.4
+    # build: apps/agile-dbus
+    restart: always
+    volumes:
+      - $DBUS_SESSION_SOCKET_DIR:/usr/src/app/.agile_bus
+
+  agile-devicemanager:
+    command: [ "bash", "/usr/src/app/scripts/start.sh", "DeviceManager" ]
+    container_name: agile-devicemanager
+    image: agileiot/agile-core-$AGILE_ARCH:v0.2.22
+    # build: apps/agile-core
+    depends_on:
+      - agile-dbus
+    volumes:
+      - $DBUS_SESSION_SOCKET_DIR:/usr/src/app/.agile_bus
+      - $DATA/core/plugins:/usr/src/app/plugins
+    environment:
+      - DBUS_SESSION_BUS_ADDRESS=unix:path=/usr/src/app/.agile_bus/agile_bus_socket
+    restart: always
+    privileged: true
+
+  agile-protocolmanager:
+    command: [ "bash", "/usr/src/app/scripts/start.sh", "ProtocolManager" ]
+    container_name: agile-protocolmanager
+    image: agileiot/agile-core-$AGILE_ARCH:v0.2.22
+    # build: apps/agile-core
+    depends_on:
+      - agile-dbus
+    volumes:
+      - $DBUS_SESSION_SOCKET_DIR:/usr/src/app/.agile_bus
+      - $DATA/core/plugins:/usr/src/app/plugins
+    environment:
+      - DBUS_SESSION_BUS_ADDRESS=unix:path=/usr/src/app/.agile_bus/agile_bus_socket
+    restart: always
+    privileged: true
+
+  agile-devicefactory:
+    command: [ "bash", "/usr/src/app/scripts/start.sh", "DeviceFactory" ]
+    container_name: agile-devicefactory
+    # image: agileiot/agile-core-$AGILE_ARCH:v0.2.22
+    build: ../agile-core
+    depends_on:
+      - agile-dbus
+    volumes:
+      - $DBUS_SESSION_SOCKET_DIR:/usr/src/app/.agile_bus
+      - $DATA/core/plugins:/usr/src/app/plugins
+    environment:
+      - DBUS_SESSION_BUS_ADDRESS=unix:path=/usr/src/app/.agile_bus/agile_bus_socket
+    restart: always
+    privileged: true
+
+  agile-core:
+    command: [ "bash", "/usr/src/app/scripts/start.sh", "http" ]
+    container_name: agile-core
+    build: ../agile-core
+    # image: agileiot/agile-core-$AGILE_ARCH:v0.2.22
+    depends_on:
+      - agile-dbus
+      - agile-devicemanager
+      - agile-devicefactory
+      - agile-protocolmanager
+    volumes:
+      - $DBUS_SESSION_SOCKET_DIR:/usr/src/app/.agile_bus
+    environment:
+      - DBUS_SESSION_BUS_ADDRESS=unix:path=/usr/src/app/.agile_bus/agile_bus_socket
+    ports:
+      - 8080:8080/tcp
+    restart: always
+    privileged: true
+
+  agile-ble:
+    container_name: agile-ble
+    image: agileiot/agile-ble-$AGILE_ARCH:v0.1.15
+    # build: apps/agile-ble
+    depends_on:
+      - agile-dbus
+    volumes:
+      - $DBUS_SESSION_SOCKET_DIR:/usr/src/app/.agile_bus
+    environment:
+      - DBUS_SESSION_BUS_ADDRESS=unix:path=/usr/src/app/.agile_bus/agile_bus_socket
+    restart: always
+    privileged: true
+    network_mode: "host"
+    command: bash -c "mkdir -p /var/run/dbus && rm -f /var/run/dbus/pid && dbus-daemon --system && hciconfig hci0 down && hciconfig hci0 up && /usr/local/libexec/bluetooth/bluetoothd -E & scripts/start.sh BLE"
+
+  agile-dummy:
+    container_name: agile-dummy
+    # image: agileiot/agile-dummy-$AGILE_ARCH
+    build: ../agile-sensi
+    depends_on:
+      - agile-dbus
+    volumes:
+      - $DBUS_SESSION_SOCKET_DIR:/usr/src/app/.agile_bus
+    environment:
+      - DBUS_SESSION_BUS_ADDRESS=unix:path=/usr/src/app/.agile_bus/agile_bus_socket
+    restart: always
+
+  agile-ui:
+    container_name: agile-ui
+    image: agileiot/agile-ui-$AGILE_ARCH:v2.5.2
+    # build: apps/agile-ui
+    restart: always
+    depends_on:
+      - agile-core
+    ports:
+      - 2000:1337/tcp
+
+  agile-osjs:
+    container_name: agile-osjs
+    image: agileiot/agile-osjs-$AGILE_ARCH:v0.4.1
+    # build: apps/agile-osjs
+    depends_on:
+      - agile-core
+    environment:
+      - AGILE_HOST=$AGILE_HOST
+    ports:
+      - 8000:8000/tcp
+    restart: always
+    volumes:
+      - /etc/hostname:/etc/hostname
+
+  agile-nodered:
+    image: agileiot/agile-nodered-$AGILE_ARCH:v0.4.3
+    container_name: agile-nodered
+    # build: apps/agile-nodered
+    hostname: agile-nodered
+    volumes:
+      - $DATA/nodered:/opt/secure-nodered/.nodered/
+    ports:
+      - 1880:1880/tcp
+    links:
+      - agile-core:agile
+    restart: always
+
+  agile-security:
+    container_name: agile-security
+    image: agileiot/agile-security-$AGILE_ARCH:v3.8.0
+    #build: apps/agile-security
+    hostname: agile-security
+    volumes:
+      - $DATA/security/idm/conf:/root/idm.conf
+      - $DATA/security/idm/db:/root/idm.db
+      - /etc/hostname:/etc/hostname
+    environment:
+      - DOCKER_CONF=/root/idm.conf
+      - AGILE_HOST=$AGILE_HOST
+    ports:
+      - 3000:3000/tcp
+      - 1444:1444/tcp
+      - 1443:1443/tcp
+    restart: always
+
+  agile-data:
+    container_name: agile-data
+    image: agileiot/agile-data-$AGILE_ARCH:v0.2.1
+    hostname: agile-data
+    # build: apps/agile-data
+    restart: always
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - agile-security
+      - agile-core
+    ports:
+      - 1338:1338/tcp
+
+  agile-recommender:
+    container_name: agile-recommender
+    image: agileiot/agile-recommender-$AGILE_ARCH:v0.3.8
+    # build: apps/agile-recommender
+    restart: always
+    ports:
+      - 8090:8090/tcp
+
+ # agile-zb:
+ #   container_name: agile-zb
+ #   image: agileiot/agile-zb-$AGILE_ARCH
+ #   # build: apps/agile-zb
+ #   depends_on:
+ #     - agile-dbus
+ #   devices:
+ #     - dev/ttyUSB0:/dev/ttyUSB0
+ #   volumes:
+ #     - $DBUS_SESSION_SOCKET_DIR:/usr/src/app/.agile_bus
+ #   environment:
+ #     - DBUS_SESSION_BUS_ADDRESS=unix:path=/usr/src/app/.agile_bus/agile_bus_socket
+ #   command: python3 dbus_server/dbus_server.py
+ #
+ # agile-zb-lamp:
+ #   container_name: agile-zb-lamp
+ #   image: agileiot/agile-zb-$AGILE_ARCH
+ #   depends_on:
+ #     - agile-zb
+ #   volumes:
+ #     - $DBUS_SESSION_SOCKET_DIR:/usr/src/app/.agile_bus
+ #   environment:
+ #     - DBUS_SESSION_BUS_ADDRESS=unix:path=/usr/src/app/.agile_bus/agile_bus_socket
+ #   command: python3 ge_link_bulb/ge_link_bulb_device.py

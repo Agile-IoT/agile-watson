@@ -1,0 +1,149 @@
+#!/bin/bash
+#-------------------------------------------------------------------------------
+# Copyright (C) 2017 Create-Net / FBK.
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+# 
+# SPDX-License-Identifier: EPL-2.0
+# 
+# Contributors:
+#     Create-Net / FBK - initial API and implementation
+#-------------------------------------------------------------------------------
+usage(){
+    echo "Usage: $0 [-c configfile] {start|stop|restart|clean|update|compose|install}
+         -c configfile: platform specific config file (default:agile.config)
+         install: create symbolic link in /usr/local/bin
+         init: run platform specific initialization commands
+         start: start all AGILE components
+         stop: stop all AGILE components
+         restart: stop and then start
+         clean: stop and remove all containers. AGILE persistent state will remain, but docker containers will be reinitialized
+         update: download newest version of docker containers
+         compose: use docker-compose commands for fine-grained control (e.g. agile compose logs)
+         docker: use docker commands for fine-grained control (e.g. agile docker ps)
+         tag <newtag>: tag all images with newtag
+         push: push all images on dockerhub
+         tag-push <newtag>: tag and push tagged images
+    "
+}
+
+is_service_up (){
+  [ $(curl -sL -w "%{http_code}\\n" "$1" -o /dev/null) -eq "$2" ]
+}
+
+wait_for_service (){
+  while ! is_service_up $1 $2  ; do
+    echo "Waiting for $1"
+    sleep 1
+  done
+}
+
+#set defaults
+realpath . &>/dev/null || realpath() {
+    P=$1
+    while readlink $P >/dev/null; do P=`readlink $P`; done
+    [[ $P = /* ]] && echo "$P" || echo "$PWD/${P#./}"
+}
+BINDIR=$(dirname $(realpath $0))
+CONFIG="$BINDIR/agile.config"
+#export COMPOSE_HTTP_TIMEOUT=300
+
+while getopts c: FLAG; do
+  case $FLAG in
+    c)
+      CONFIG=$OPTARG
+      ;;
+    h)
+      usage
+      ;;
+    \?)
+      echo "Option -$OPTARG not allowed."
+      usage
+      ;;
+  esac
+done
+
+[ -r "$CONFIG" ] && . $CONFIG
+[[ $AGILE_STACK = /* ]] || AGILE_STACK=$BINDIR/$AGILE_STACK
+
+COMPOSE="docker-compose -f $AGILE_STACK/docker-compose.yml"
+[ -e $AGILE_STACK/docker-compose.override.yml ] && COMPOSE+=" -f $AGILE_STACK/docker-compose.override.yml"
+
+
+#remove already parsed args
+shift $((OPTIND-1))
+
+case "$1" in
+  init)
+    agile-gw-init
+  ;;
+  start)
+    $COMPOSE up -d
+    wait_for_service "http://$AGILE_HOST:8080" 404
+    wait_for_service "http://$AGILE_HOST:2000" 200
+    wait_for_service "http://$AGILE_HOST:8000" 200
+    wait_for_service "http://$AGILE_HOST:1880" 200
+    wait_for_service "http://$AGILE_HOST:3000" 200
+    ;;
+  stop)
+    shift
+    $COMPOSE stop "$@"
+    ;;
+  clean)
+    shift
+    $COMPOSE down --remove-orphans "$@"
+    ;;
+  restart)
+    shift
+    $0 stop
+    sleep 1
+    $0 start
+    ;;
+  update)
+    shift
+    $COMPOSE pull "$@"
+    ;;
+  zb-start)
+    $COMPOSE up -d agile-zb
+    sleep 3
+    $COMPOSE up -d agile-zb-lamp
+    ;;
+  zb-stop)
+    $COMPOSE stop agile-zb-lamp agile-zb
+    ;;
+  compose)
+    shift
+    $COMPOSE "$@"
+    ;;
+  docker)
+    shift
+    docker "$@"
+    ;;
+  install)
+    ln -si $BINDIR/agile /usr/local/bin/
+    ;;
+  tag)
+    shift
+    TAG=$1
+    for IMAGE in `grep "^[^#]*image:" $AGILE_STACK/docker-compose.yml | sed s/image://` ; do
+      eval docker tag $IMAGE ${IMAGE/:*/}:$TAG
+    done
+    ;;
+  tag-push)
+    shift
+    TAG=$1
+    for IMAGE in `grep "^[^#]*image:" $AGILE_STACK/docker-compose.yml | sed s/image://` ; do
+      eval docker tag $IMAGE ${IMAGE/:*/}:$TAG
+      eval docker push ${IMAGE/:*/}:$TAG
+    done
+    ;;
+  push)
+    $COMPOSE push
+    ;;
+  *)
+    usage
+    exit 1
+    ;;
+esac
