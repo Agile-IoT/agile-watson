@@ -8,7 +8,7 @@
 * Apache Maven 3 at least
 
 ## clone the project
-* Clone the project from Github
+1. Clone the project from Github
 * The project is tructured as follow
  * Agile: updated version of Agile IoT platform including a dummy device measuing pollution and temperature.
  * Watson-interworking: interworking proxy component that discover devices from Agile platform and pushing data to Watson IoT Platform
