@@ -25,13 +25,13 @@ Use the config.ini file to make your configuration
 #### MQTT parameters
 ```sh
 MQTT_TOPICS = iot-2/type/+/id/+/evt/event/fmt/+
-MQTT_SERVER_URI = ssl://8riy9e.messaging.internetofthings.ibmcloud.com:8883
+MQTT_SERVER_URI = ssl://XXXXXXXXXX.messaging.internetofthings.ibmcloud.com:8883
 ```
 #### Watson IoT Platform parameters
 ```sh
-APP_ID = a:8riy9e:oneM2M123
-API_KEY = a-8riy9e-e2ywsxpahe
-AUTH_TOKEN =  vx)RY+4MW-gqeUwkC8
+APP_ID = XXXXXXXXXX
+API_KEY = XXXXXXXXXX
+AUTH_TOKEN =  XXXXXXXXXX
 ```
 #### Prediction parameters
 ```sh
