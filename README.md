@@ -28,14 +28,14 @@ Clone the project from Github.
 
 ## Run Watson interworking
 1. Open the Watson interworking project available on folder watson-interworking
-1. Move to folder src
-2. Install the Node required libraries
+2. Move to folder src
+3. Install the Node required libraries
 ```shell
 npm install request
 npm install ws
 npm install ibmiotf
 ```
-* Configure the interworking using the file config.js
+4 Configure the interworking using the file config.js
 
 ```js
 const config = {
@@ -58,7 +58,7 @@ const config = {
 };
 ```
 
-* Run the project
+5 Run the project
 ```shell
 node app.js
 ```
@@ -84,7 +84,7 @@ node app.js
 $ mvn clean install
 ```
 
-3. Configure the analytics using the file config.ini
+3. Configure the project using the file config.ini
 
 ```shell
 # MQTT parameters
@@ -102,8 +102,7 @@ ZSCORE_WINDOW = 10
 PREDICTIVE_SERVICE_URL = https://ibm-watson-ml.eu-gb.bluemix.net/pm/v1/score/nocycle20rebuid50?accesskey=EzjIR1yqpeSLI1k8XXXO1x8hwYLRGn9Hb4/5XXgqYG5wWJAm8oHM3dFJPzSvZ0fKc1AbOE1UW5e5NZRAC6JLeJm4UhduKiR4fCfmGQLC1t8=
 ```
 
-4. Start the analytics
-Execute the following command from the folde onem2m-analytics to start the analytics
+4. Run the project using the following command
 ```shell
 $ mvn exec:java 
 ```
