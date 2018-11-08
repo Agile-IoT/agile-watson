@@ -17,7 +17,7 @@ Clone the project from Github.
     * Watson-interworking: interworking proxy component that discover devices from Agile platform and pushing data to Watson IoT Platform
     * Watson-analytics: analytics module subscribing to data from Watson IoT platform and puishing it to Watson Machine Learning service to measure trends and calculate deviation. Deviation are stored back into Watson IoT Platform for triggering alerts when needed.
 
-## Run Agile platform
+## Run Agile IoT platform
 1. Open the Agile platform project available on folder watson-interworking
 2. Move to folder agile-cli
 3. Run the agile platform
@@ -92,9 +92,9 @@ MQTT_TOPICS = iot-2/type/+/id/+/evt/event/fmt/+
 MQTT_SERVER_URI = ssl://8riy9e.messaging.internetofthings.ibmcloud.com:8883
 
 #Watson IoT Platform parameters
-APP_ID = a:8riy9e:oneM2M123
-API_KEY = a-8riy9e-e2ywsxpahe
-AUTH_TOKEN =  vx)RY+4MW-gqeUwkC8
+APP_ID = XXXXXXXXXXXXXX
+API_KEY = XXXXXXXXXXXXXX
+AUTH_TOKEN =  XXXXXXXXXXXXXX
 
 #Prediction parameters
 PREDICTION_CYCLE = 10
