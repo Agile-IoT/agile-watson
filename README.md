@@ -108,15 +108,16 @@ $ mvn exec:java
 ```
 
 # Third party libraries used
-* ibm-watson-iot/predictive-analytics-samples
+This project uses open source components. You can find the source code of their open source projects below. We acknoledge and we are grateful to these developers for their contributions to open source.
+* org.apache.spark
+* com.google.guava
+* Github ibm-watson-iot/predictive-analytics-samples
 * org.eclipse.paho
 * org.apache.commons
 * log4j
-* com.google.guava
 * org.apache.httpcomponents
 * args4j
-* org.apache.commons
 * org.apache.wink
 * org.scala-lang
-* org.apache.spark
+
 
