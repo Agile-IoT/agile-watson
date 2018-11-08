@@ -34,7 +34,7 @@ npm install ibmiotf
 ```
 * Configure the interworking using the file config.js
 
-```json
+```js
 const config = {
     agile: {
         host: '192.168.137.5',
