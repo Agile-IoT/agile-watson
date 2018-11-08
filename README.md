@@ -16,12 +16,12 @@ Clone the project from Github.
 
 ## Run Agile platform
 1. Open the Agile platform project available on folder watson-interworking
-2. Run the agile platform
+2. Move to folder agile-cli
+3. Run the agile platform
 ```shell
-cd agile/agile/agile-cli
 ./agile start
 ```
-2. Check Agile web interface: http://127.0.0.1:3000/login
+4. Check Agile web interface: http://127.0.0.1:3000/login
 
 ## Run Watson interworking
 1. Open the Watson interworking project available on folder watson-interworking
