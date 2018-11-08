@@ -32,6 +32,29 @@ npm install request
 npm install ws
 npm install ibmiotf
 ```
+* Configure the interworking using the file config.js
+
+```json
+const config = {
+    agile: {
+        host: '192.168.137.5',
+        port: 8080,
+        pollingPeriod: 15000,
+        log: "[AGILE]:"
+    },
+    watson: {
+        orga: 'thq3pl',
+        domain : 'internetofthings.ibmcloud.com',
+        application: {
+            key: 'a-thq3pl-qt35bgz8ay',
+            token: 'PUH4HwOir?MoB8BkvU',
+            id: 'agile-watson-ipe'
+        },
+        log: "[WATSON]:"
+    }
+};
+```
+
 * Run the project
 ```shell
 node app.js
@@ -53,13 +76,12 @@ node app.js
 
 ## Run Watson Analytics 
 1. Open the Watson Analytics project available on folder watson-analytics
-2. Build the project
+2. Build the project using the following command. The binary and config files are generated under the folder "target"
 ```sh
 $ mvn clean install
 ```
-The binary and config files are generated under the folder "target"
 
-3. you can Configure the analytics using the file config.ini
+3. Configure the analytics using the file config.ini
 
 ```shell
 # MQTT parameters
