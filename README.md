@@ -106,3 +106,17 @@ PREDICTIVE_SERVICE_URL = https://ibm-watson-ml.eu-gb.bluemix.net/pm/v1/score/noc
 ```shell
 $ mvn exec:java 
 ```
+
+# Third party libraries used
+* ibm-watson-iot/predictive-analytics-samples
+* org.eclipse.paho
+* org.apache.commons
+* log4j
+* com.google.guava
+* org.apache.httpcomponents
+* args4j
+* org.apache.commons
+* org.apache.wink
+* org.scala-lang
+* org.apache.spark
+
