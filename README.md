@@ -1,11 +1,14 @@
 # Agile to Watson interworking
 
 ## Requirements
-* docker version 1.10.0 at least
-* docker-compose version 1.10.0 at least
-* Node.JS 6.4.1 at least
-* JAVA 1.7 at least
-* Apache Maven 3 at least
+* To run Agile IoT Platform you need
+   * docker version 1.10.0 at least
+   * docker-compose version 1.10.0 at least
+* To run Watson interworking you need
+   * Node.JS 6.4.1 at least
+* To run Watson Analytics you need
+   * JAVA 1.7 at least
+   * Apache Maven 3 at least
 
 ## clone the project
 Clone the project from Github. 
