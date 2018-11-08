@@ -40,17 +40,17 @@ npm install ibmiotf
 ```js
 const config = {
     agile: {
-        host: '192.168.137.5',
+        host: '127.0.0.1',
         port: 8080,
         pollingPeriod: 15000,
         log: "[AGILE]:"
     },
     watson: {
-        orga: 'thq3pl',
+        orga: 'XXXXXXXXX',
         domain : 'internetofthings.ibmcloud.com',
         application: {
-            key: 'a-thq3pl-qt35bgz8ay',
-            token: 'PUH4HwOir?MoB8BkvU',
+            key: 'XXXXXXXXX',
+            token: 'XXXXXXXXXX',
             id: 'agile-watson-ipe'
         },
         log: "[WATSON]:"
