@@ -8,8 +8,7 @@
 * Apache Maven 3 at least
 
 ## clone the project
-1. Clone the project from Github
-* The project is tructured as follow
+Clone the project from Github. The project is tructured as follow:
     * Agile: updated version of Agile IoT platform including a dummy device measuing pollution and temperature.
     * Watson-interworking: interworking proxy component that discover devices from Agile platform and pushing data to Watson IoT Platform
     * Watson-analytics: analytics module subscribing to data from Watson IoT platform and puishing it to Watson Machine Learning service to measure trends and calculate deviation. Deviation are stored back into Watson IoT Platform for triggering alerts when needed.
