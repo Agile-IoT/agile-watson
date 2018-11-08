@@ -1,11 +1,12 @@
 # Agile to Watson interworking
 
-##Run agile platform
+
 
 ## Requirements
 * docker version 1.10.0 (or later) and docker-compose version 1.10.0 (or later)
 * git
 
+## Run agile platform
 1. Clone the project
 2. Go to agile folder
 3. Run the agile platform using the following command
