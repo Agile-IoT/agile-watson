@@ -8,17 +8,17 @@
 
 const config = {
     agile: {
-        host: '192.168.137.5',
-        port: 8080,
+        host: 'XXX.XXX.XXX.XXX',
+        port: XXXX,
         pollingPeriod: 15000,
         log: "[AGILE]:"
     },
     watson: {
-        orga: 'thq3pl',
+        orga: 'XXXX',
         domain : 'internetofthings.ibmcloud.com',
         application: {
-            key: 'a-thq3pl-qt35bgz8ay',
-            token: 'PUH4HwOir?MoB8BkvU',
+            key: 'XXXXXXXXX',
+            token: 'XXXXXXXXXXXXXXX',
             id: 'agile-watson-ipe'
         },
         log: "[WATSON]:"
